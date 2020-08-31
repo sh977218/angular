@@ -33,7 +33,6 @@ import {Checks, getAllRouteGuards} from './utils/preactivation';
 import {isUrlTree} from './utils/type_guards';
 
 
-
 /**
  * @description
  *
@@ -920,7 +919,15 @@ export class Router {
           // hybrid apps.
           setTimeout(() => {
             const {source, state, urlTree} = currentChange;
-            this.scheduleNavigation(urlTree, source, state, {replaceUrl: true});
+            const extras: NavigationExtras = {replaceUrl: true};
+            if (state) {
+              const stateCopy = {...state} as Partial<RestoredState>;
+              delete stateCopy.navigationId;
+              if (Object.keys(stateCopy).length !== 0) {
+                extras.state = stateCopy;
+              }
+            }
+            this.scheduleNavigation(urlTree, source, state, extras);
           }, 0);
         }
         this.lastLocationChangeInfo = currentChange;
@@ -1002,7 +1009,7 @@ export class Router {
     this.lastSuccessfulId = -1;
   }
 
-  /** @docsNotRequired */
+  /** @nodoc */
   ngOnDestroy(): void {
     this.dispose();
   }

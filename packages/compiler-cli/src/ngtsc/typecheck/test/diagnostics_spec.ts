@@ -227,7 +227,8 @@ runInEachFileSystem(() => {
             name: 'GuardDir',
             selector: '[guard]',
             inputs: {'guard': 'guard'},
-            ngTemplateGuards: [{inputName: 'guard', type: 'binding'}]
+            ngTemplateGuards: [{inputName: 'guard', type: 'binding'}],
+            undeclaredInputFields: ['guard'],
           }]);
 
       expect(messages).toEqual([
@@ -245,6 +246,17 @@ runInEachFileSystem(() => {
       }`);
 
       expect(messages).toEqual([]);
+    });
+
+    it('should treat unary operators as literal types', () => {
+      const messages = diagnose(`{{ test(-1) + test(+1) + test(-2) }}`, `
+      class TestComponent {
+        test(value: -1 | 1): number { return value; }
+      }`);
+
+      expect(messages).toEqual([
+        `TestComponent.html(1, 31): Argument of type '-2' is not assignable to parameter of type '1 | -1'.`,
+      ]);
     });
 
     describe('outputs', () => {
@@ -444,7 +456,7 @@ class TestComponent {
         }`);
 
       expect(messages).toEqual(
-          [`TestComponent.html(1, 15): Type '2' is not assignable to type 'string'.`]);
+          [`TestComponent.html(1, 15): Type 'number' is not assignable to type 'string'.`]);
     });
   });
 });

@@ -1,3 +1,182 @@
+<a name="10.1.0-rc.0"></a>
+# 10.1.0-rc.0 (2020-08-26)
+
+
+### Bug Fixes
+
+* **localize:** ensure required XLIFF parameters are serialized ([#38575](https://github.com/angular/angular/issues/38575)) ([f0af387](https://github.com/angular/angular/commit/f0af387)), closes [#38570](https://github.com/angular/angular/issues/38570)
+* **localize:** render text of extracted placeholders ([#38536](https://github.com/angular/angular/issues/38536)) ([14e90be](https://github.com/angular/angular/commit/14e90be))
+
+
+
+<a name="10.0.14"></a>
+## 10.0.14 (2020-08-26)
+
+
+
+<a name="10.1.0-next.8"></a>
+# 10.1.0-next.8 (2020-08-24)
+
+
+### Bug Fixes
+
+* **localize:** extract the correct message ids ([#38498](https://github.com/angular/angular/issues/38498)) ([ac461e1](https://github.com/angular/angular/commit/ac461e1))
+* **router:** support lazy loading for empty path named outlets ([#38379](https://github.com/angular/angular/issues/38379)) ([7ad3264](https://github.com/angular/angular/commit/7ad3264)), closes [#12842](https://github.com/angular/angular/issues/12842)
+
+
+### Features
+
+* **compiler:** support unary operators for more accurate type checking ([#37918](https://github.com/angular/angular/issues/37918)) ([874792d](https://github.com/angular/angular/commit/874792d)), closes [#20845](https://github.com/angular/angular/issues/20845) [#36178](https://github.com/angular/angular/issues/36178)
+* **compiler-cli:** add support for TypeScript 4.0 ([#38076](https://github.com/angular/angular/issues/38076)) ([0fc44e0](https://github.com/angular/angular/commit/0fc44e0))
+
+
+### Performance Improvements
+
+* **forms:** use internal `ngDevMode` flag to tree-shake error messages in prod builds ([#37821](https://github.com/angular/angular/issues/37821)) ([201a546](https://github.com/angular/angular/commit/201a546)), closes [#37697](https://github.com/angular/angular/issues/37697)
+
+
+
+<a name="10.0.12"></a>
+## 10.0.12 (2020-08-24)
+
+
+### Bug Fixes
+
+* **compiler-cli:** adding references to const enums in runtime code ([#38542](https://github.com/angular/angular/issues/38542)) ([814b436](https://github.com/angular/angular/commit/814b436)), closes [#38513](https://github.com/angular/angular/issues/38513)
+* **core:** remove closing body tag from inert DOM builder ([#38454](https://github.com/angular/angular/issues/38454)) ([5528536](https://github.com/angular/angular/commit/5528536))
+* **localize:** include the last placeholder in parsed translation text ([#38452](https://github.com/angular/angular/issues/38452)) ([57d1a48](https://github.com/angular/angular/commit/57d1a48))
+* **localize:** parse all parts of a translation with nested HTML ([#38452](https://github.com/angular/angular/issues/38452)) ([07b99f5](https://github.com/angular/angular/commit/07b99f5)), closes [#38422](https://github.com/angular/angular/issues/38422)
+
+
+### Features
+
+* **language-service:** introduce hybrid visitor to locate AST node ([#38540](https://github.com/angular/angular/issues/38540)) ([66d8c22](https://github.com/angular/angular/commit/66d8c22))
+
+
+
+<a name="10.1.0-next.7"></a>
+# 10.1.0-next.7 (2020-08-19)
+
+This release contains various API docs improvements.
+
+
+<a name="10.0.11"></a>
+## 10.0.11 (2020-08-19)
+
+
+### Bug Fixes
+
+* **router:** ensure routerLinkActive updates when associated routerLinks change (resubmit of [#38349](https://github.com/angular/angular/issues/38349)) ([#38511](https://github.com/angular/angular/issues/38511)) ([0af9533](https://github.com/angular/angular/commit/0af9533)), closes [#18469](https://github.com/angular/angular/issues/18469)
+
+
+
+<a name="10.1.0-next.6"></a>
+# 10.1.0-next.6 (2020-08-17)
+
+
+### Bug Fixes
+
+* **core:** detect DI parameters in JIT mode for downleveled ES2015 classes ([#38463](https://github.com/angular/angular/issues/38463)) ([ca07da4](https://github.com/angular/angular/commit/ca07da4)), closes [#38453](https://github.com/angular/angular/issues/38453)
+* **core:** move generated i18n statements to the `consts` field of ComponentDef ([#38404](https://github.com/angular/angular/issues/38404)) ([cb05c01](https://github.com/angular/angular/commit/cb05c01))
+* **localize:** render ICU placeholders in extracted translation files ([#38484](https://github.com/angular/angular/issues/38484)) ([81c3e80](https://github.com/angular/angular/commit/81c3e80))
+* **ngcc:** detect synthesized delegate constructors for downleveled ES2015 classes ([#38463](https://github.com/angular/angular/issues/38463)) ([3b9c802](https://github.com/angular/angular/commit/3b9c802)), closes [#38453](https://github.com/angular/angular/issues/38453) [#38453](https://github.com/angular/angular/issues/38453)
+
+
+### Performance Improvements
+
+* **compiler-cli:** don't emit template guards when child scope is empty ([#38418](https://github.com/angular/angular/issues/38418)) ([1388c17](https://github.com/angular/angular/commit/1388c17))
+* **compiler-cli:** only generate directive declarations when used ([#38418](https://github.com/angular/angular/issues/38418)) ([fb8f4b4](https://github.com/angular/angular/commit/fb8f4b4))
+* **compiler-cli:** only generate type-check code for referenced DOM elements ([#38418](https://github.com/angular/angular/issues/38418)) ([f42e6ce](https://github.com/angular/angular/commit/f42e6ce))
+
+### Code Refactoring
+* **router:** export DefaultRouteReuseStrategy to Router public_api ([#31575](https://github.com/angular/angular/issues/31575)) ([ca79880](https://github.com/angular/angular/commit/ca79880))
+
+
+
+<a name="10.0.10"></a>
+## 10.0.10 (2020-08-17)
+
+
+### Bug Fixes
+
+* **common:** Allow scrolling when browser supports scrollTo ([#38468](https://github.com/angular/angular/issues/38468)) ([b32126c](https://github.com/angular/angular/commit/b32126c)), closes [#30630](https://github.com/angular/angular/issues/30630)
+* **core:** detect DI parameters in JIT mode for downleveled ES2015 classes ([#38500](https://github.com/angular/angular/issues/38500)) ([863acb6](https://github.com/angular/angular/commit/863acb6)), closes [#38453](https://github.com/angular/angular/issues/38453)
+* **core:** error if CSS custom property in host binding has number in name ([#38432](https://github.com/angular/angular/issues/38432)) ([cb83b8a](https://github.com/angular/angular/commit/cb83b8a)), closes [#37292](https://github.com/angular/angular/issues/37292)
+* **core:** fix multiple nested views removal from ViewContainerRef ([#38317](https://github.com/angular/angular/issues/38317)) ([d5e09f4](https://github.com/angular/angular/commit/d5e09f4)), closes [#38201](https://github.com/angular/angular/issues/38201)
+* **ngcc:** detect synthesized delegate constructors for downleveled ES2015 classes ([#38500](https://github.com/angular/angular/issues/38500)) ([f3dd6c2](https://github.com/angular/angular/commit/f3dd6c2)), closes [#38453](https://github.com/angular/angular/issues/38453) [#38453](https://github.com/angular/angular/issues/38453)
+* **router:** ensure routerLinkActive updates when associated routerLinks change ([#38349](https://github.com/angular/angular/issues/38349)) ([989e8a1](https://github.com/angular/angular/commit/989e8a1)), closes [#18469](https://github.com/angular/angular/issues/18469)
+
+
+
+<a name="10.1.0-next.5"></a>
+# 10.1.0-next.5 (2020-08-12)
+
+
+### Bug Fixes
+
+* **compiler-cli:** avoid creating value expressions for symbols from type-only imports ([#37912](https://github.com/angular/angular/issues/37912)) ([18098d3](https://github.com/angular/angular/commit/18098d3)), closes [#37900](https://github.com/angular/angular/issues/37900)
+* **compiler-cli:** type-check inputs that include undefined when there's coercion members ([#38273](https://github.com/angular/angular/issues/38273)) ([7525f3a](https://github.com/angular/angular/commit/7525f3a))
+* **router:** defer loading of wildcard module until needed ([#38348](https://github.com/angular/angular/issues/38348)) ([8f708b5](https://github.com/angular/angular/commit/8f708b5)), closes [#25494](https://github.com/angular/angular/issues/25494)
+* **router:** restore 'history.state' object for navigations coming from Angular router ([#28108](https://github.com/angular/angular/issues/28108)) ([#28176](https://github.com/angular/angular/issues/28176)) ([df76a20](https://github.com/angular/angular/commit/df76a20))
+
+
+### Features
+
+* **compiler-cli:** Add compiler option to report errors when assigning to restricted input fields ([#38249](https://github.com/angular/angular/issues/38249)) ([71138f6](https://github.com/angular/angular/commit/71138f6))
+* **router:** better warning message when a router outlet has not been instantiated ([#30246](https://github.com/angular/angular/issues/30246)) ([1609815](https://github.com/angular/angular/commit/1609815))
+
+
+
+<a name="10.0.9"></a>
+## 10.0.9 (2020-08-12)
+
+
+### Bug Fixes
+
+* **common:** ensure scrollRestoration is writable ([#30630](https://github.com/angular/angular/issues/30630)) ([#38357](https://github.com/angular/angular/issues/38357)) ([58f4b3a](https://github.com/angular/angular/commit/58f4b3a)), closes [#30629](https://github.com/angular/angular/issues/30629)
+* **compiler:** evaluate safe navigation expressions in correct binding order ([#37911](https://github.com/angular/angular/issues/37911)) ([f5b9d87](https://github.com/angular/angular/commit/f5b9d87)), closes [#37194](https://github.com/angular/angular/issues/37194)
+* **compiler-cli:** avoid creating value expressions for symbols from type-only imports ([#38415](https://github.com/angular/angular/issues/38415)) ([ca2b4bc](https://github.com/angular/angular/commit/ca2b4bc)), closes [#37912](https://github.com/angular/angular/issues/37912)
+* **compiler-cli:** infer quote expressions as any type in type checker ([#37917](https://github.com/angular/angular/issues/37917)) ([5b87c67](https://github.com/angular/angular/commit/5b87c67)), closes [#36568](https://github.com/angular/angular/issues/36568)
+* **compiler-cli:** mark eager `NgModuleFactory` construction as not side effectful ([#38320](https://github.com/angular/angular/issues/38320)) ([016a41b](https://github.com/angular/angular/commit/016a41b)), closes [#38147](https://github.com/angular/angular/issues/38147)
+* **compiler-cli:** match wrapHost parameter types within plugin interface ([#38004](https://github.com/angular/angular/issues/38004)) ([df01a82](https://github.com/angular/angular/commit/df01a82))
+* **compiler-cli:** preserve quotes in class member names ([#38387](https://github.com/angular/angular/issues/38387)) ([c9acb7b](https://github.com/angular/angular/commit/c9acb7b)), closes [#38311](https://github.com/angular/angular/issues/38311)
+* **core:** prevent NgModule scope being overwritten in JIT compiler ([#37795](https://github.com/angular/angular/issues/37795)) ([3acebdc](https://github.com/angular/angular/commit/3acebdc)), closes [#37105](https://github.com/angular/angular/issues/37105)
+* **core:** queries not matching string injection tokens ([#38321](https://github.com/angular/angular/issues/38321)) ([32109dc](https://github.com/angular/angular/commit/32109dc)), closes [#38313](https://github.com/angular/angular/issues/38313) [#38315](https://github.com/angular/angular/issues/38315)
+* **core:** Store the currently selected ICU in `LView` ([#38345](https://github.com/angular/angular/issues/38345)) ([ee5123f](https://github.com/angular/angular/commit/ee5123f))
+* **platform-server:** remove styles added by ServerStylesHost on destruction ([#38367](https://github.com/angular/angular/issues/38367)) ([7f11149](https://github.com/angular/angular/commit/7f11149))
+* **router:** prevent calling unsubscribe on undefined subscription in RouterPreloader ([#38344](https://github.com/angular/angular/issues/38344)) ([4151314](https://github.com/angular/angular/commit/4151314))
+* **service-worker:** fix the chrome debugger syntax highlighter ([#38332](https://github.com/angular/angular/issues/38332)) ([f5d5bac](https://github.com/angular/angular/commit/f5d5bac))
+
+
+
+<a name="10.1.0-next.4"></a>
+# 10.1.0-next.4 (2020-08-04)
+
+
+### Bug Fixes
+
+* **common:** narrow `NgIf` context variables in template type checker ([#36627](https://github.com/angular/angular/issues/36627)) ([9c8bc4a](https://github.com/angular/angular/commit/9c8bc4a))
+* **compiler:** mark `NgModuleFactory` construction as not side effectful ([#38147](https://github.com/angular/angular/issues/38147)) ([7f8c222](https://github.com/angular/angular/commit/7f8c222))
+
+
+### Features
+
+* **core:** rename async to waitForAsync to avoid confusing ([#37583](https://github.com/angular/angular/issues/37583)) ([8f07429](https://github.com/angular/angular/commit/8f07429))
+* **core:** update reference and doc to change `async` to `waitAsync`. ([#37583](https://github.com/angular/angular/issues/37583)) ([8fbf40b](https://github.com/angular/angular/commit/8fbf40b))
+
+
+
+<a name="10.0.8"></a>
+## 10.0.8 (2020-08-04)
+
+
+### Bug Fixes
+
+* **compiler:** add PURE annotation to getInheritedFactory calls ([#38291](https://github.com/angular/angular/issues/38291)) ([03d8e31](https://github.com/angular/angular/commit/03d8e31))
+* **compiler:** update unparsable character reference entity error messages ([#38319](https://github.com/angular/angular/issues/38319)) ([cea4678](https://github.com/angular/angular/commit/cea4678)), closes [#26067](https://github.com/angular/angular/issues/26067)
+
+
+
 <a name="10.0.7"></a>
 ## 10.0.7 (2020-07-30)
 

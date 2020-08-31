@@ -2079,7 +2079,13 @@ runInEachFileSystem(os => {
 
              const errors = env.driveDiagnostics();
              expect(errors.length).toBe(1);
-             expect(errors[0].messageText).toContain('No suitable injection token for parameter');
+             expect(ts.flattenDiagnosticMessageText(errors[0].messageText, '\n'))
+                 .toBe(
+                     `No suitable injection token for parameter 'notInjectable' of class 'Test'.\n` +
+                     `  Consider using the @Inject decorator to specify an injection token.`);
+             expect(errors[0].relatedInformation!.length).toBe(1);
+             expect(errors[0].relatedInformation![0].messageText)
+                 .toBe('This type is not supported as injection token.');
            });
 
         it('should give a compile-time error if an invalid @Injectable is used with an argument',
@@ -2096,8 +2102,138 @@ runInEachFileSystem(os => {
 
              const errors = env.driveDiagnostics();
              expect(errors.length).toBe(1);
-             expect(errors[0].messageText).toContain('No suitable injection token for parameter');
+             expect(ts.flattenDiagnosticMessageText(errors[0].messageText, '\n'))
+                 .toBe(
+                     `No suitable injection token for parameter 'notInjectable' of class 'Test'.\n` +
+                     `  Consider using the @Inject decorator to specify an injection token.`);
+             expect(errors[0].relatedInformation!.length).toBe(1);
+             expect(errors[0].relatedInformation![0].messageText)
+                 .toBe('This type is not supported as injection token.');
            });
+
+        it('should report an error when using a type-only import as injection token', () => {
+          env.tsconfig({strictInjectionParameters: true});
+          env.write(`types.ts`, `
+             export class TypeOnly {}
+           `);
+          env.write(`test.ts`, `
+             import {Injectable} from '@angular/core';
+             import type {TypeOnly} from './types';
+
+             @Injectable()
+             export class MyService {
+               constructor(param: TypeOnly) {}
+             }
+          `);
+
+          const diags = env.driveDiagnostics();
+          expect(diags.length).toBe(1);
+          expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
+              .toBe(
+                  `No suitable injection token for parameter 'param' of class 'MyService'.\n` +
+                  `  Consider changing the type-only import to a regular import, ` +
+                  `or use the @Inject decorator to specify an injection token.`);
+          expect(diags[0].relatedInformation!.length).toBe(2);
+          expect(diags[0].relatedInformation![0].messageText)
+              .toBe(
+                  'This type is imported using a type-only import, ' +
+                  'which prevents it from being usable as an injection token.');
+          expect(diags[0].relatedInformation![1].messageText)
+              .toBe('The type-only import occurs here.');
+        });
+
+        it('should report an error when using a primitive type as injection token', () => {
+          env.tsconfig({strictInjectionParameters: true});
+          env.write(`test.ts`, `
+             import {Injectable} from '@angular/core';
+
+             @Injectable()
+             export class MyService {
+               constructor(param: string) {}
+             }
+          `);
+
+          const diags = env.driveDiagnostics();
+          expect(diags.length).toBe(1);
+          expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
+              .toBe(
+                  `No suitable injection token for parameter 'param' of class 'MyService'.\n` +
+                  `  Consider using the @Inject decorator to specify an injection token.`);
+          expect(diags[0].relatedInformation!.length).toBe(1);
+          expect(diags[0].relatedInformation![0].messageText)
+              .toBe('This type is not supported as injection token.');
+        });
+
+        it('should report an error when using a union type as injection token', () => {
+          env.tsconfig({strictInjectionParameters: true});
+          env.write(`test.ts`, `
+             import {Injectable} from '@angular/core';
+
+             export class ClassA {}
+             export class ClassB {}
+
+             @Injectable()
+             export class MyService {
+               constructor(param: ClassA|ClassB) {}
+             }
+          `);
+
+          const diags = env.driveDiagnostics();
+          expect(diags.length).toBe(1);
+          expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
+              .toBe(
+                  `No suitable injection token for parameter 'param' of class 'MyService'.\n` +
+                  `  Consider using the @Inject decorator to specify an injection token.`);
+          expect(diags[0].relatedInformation!.length).toBe(1);
+          expect(diags[0].relatedInformation![0].messageText)
+              .toBe('This type is not supported as injection token.');
+        });
+
+        it('should report an error when using an interface as injection token', () => {
+          env.tsconfig({strictInjectionParameters: true});
+          env.write(`test.ts`, `
+             import {Injectable} from '@angular/core';
+
+             export interface Interface {}
+
+             @Injectable()
+             export class MyService {
+               constructor(param: Interface) {}
+             }
+          `);
+
+          const diags = env.driveDiagnostics();
+          expect(diags.length).toBe(1);
+          expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
+              .toBe(
+                  `No suitable injection token for parameter 'param' of class 'MyService'.\n` +
+                  `  Consider using the @Inject decorator to specify an injection token.`);
+          expect(diags[0].relatedInformation!.length).toBe(2);
+          expect(diags[0].relatedInformation![0].messageText)
+              .toBe('This type does not have a value, so it cannot be used as injection token.');
+          expect(diags[0].relatedInformation![1].messageText).toBe('The type is declared here.');
+        });
+
+        it('should report an error when no type is present', () => {
+          env.tsconfig({strictInjectionParameters: true, noImplicitAny: false});
+          env.write(`test.ts`, `
+             import {Injectable} from '@angular/core';
+
+             @Injectable()
+             export class MyService {
+               constructor(param) {}
+             }
+          `);
+
+          const diags = env.driveDiagnostics();
+          expect(diags.length).toBe(1);
+          expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
+              .toBe(
+                  `No suitable injection token for parameter 'param' of class 'MyService'.\n` +
+                  `  Consider adding a type to the parameter or ` +
+                  `use the @Inject decorator to specify an injection token.`);
+          expect(diags[0].relatedInformation).toBeUndefined();
+        });
 
         it('should not give a compile-time error if an invalid @Injectable is used with useValue',
            () => {
@@ -2240,7 +2376,8 @@ runInEachFileSystem(os => {
 
           const errors = env.driveDiagnostics();
           expect(errors.length).toBe(1);
-          expect(errors[0].messageText).toContain('No suitable injection token for parameter');
+          expect(ts.flattenDiagnosticMessageText(errors[0].messageText, '\n'))
+              .toContain('No suitable injection token for parameter');
         });
       });
 
@@ -3538,7 +3675,9 @@ runInEachFileSystem(os => {
       expect(factoryContents).toContain(`import * as i0 from '@angular/core';`);
       expect(factoryContents).toContain(`import { NotAModule, TestModule } from './test';`);
       expect(factoryContents)
-          .toContain(`export var TestModuleNgFactory = new i0.\u0275NgModuleFactory(TestModule);`);
+          .toContain(
+              'export var TestModuleNgFactory = i0.\u0275noSideEffects(function () { ' +
+              'return new i0.\u0275NgModuleFactory(TestModule); });');
       expect(factoryContents).not.toContain(`NotAModuleNgFactory`);
       expect(factoryContents).not.toContain('\u0275NonEmptyModule');
 
@@ -3677,11 +3816,32 @@ runInEachFileSystem(os => {
         env.driveMain();
 
         const factoryContents = env.getContents('test.ngfactory.js');
-        expect(normalize(factoryContents)).toBe(normalize(`
-        import * as i0 from "./r3_symbols";
-        import { TestModule } from './test';
-        export var TestModuleNgFactory = new i0.NgModuleFactory(TestModule);
-      `));
+        expect(factoryContents)
+            .toBe(
+                'import * as i0 from "./r3_symbols";\n' +
+                'import { TestModule } from \'./test\';\n' +
+                'export var TestModuleNgFactory = i0.\u0275noSideEffects(function () {' +
+                ' return new i0.NgModuleFactory(TestModule); });\n');
+      });
+
+      it('should generate side effectful NgModuleFactory constructor when lazy loaded', () => {
+        env.tsconfig({'allowEmptyCodegenFiles': true});
+
+        env.write('test.ts', `
+          import {NgModule} from '@angular/core';
+
+          @NgModule({
+            id: 'test', // ID to use for lazy loading.
+          })
+          export class TestModule {}
+        `);
+
+        env.driveMain();
+
+        // Should **not** contain noSideEffects(), because the module is lazy loaded.
+        const factoryContents = env.getContents('test.ngfactory.js');
+        expect(factoryContents)
+            .toContain('export var TestModuleNgFactory = new i0.ɵNgModuleFactory(TestModule);');
       });
 
       describe('file-level comments', () => {
@@ -4171,9 +4331,16 @@ runInEachFileSystem(os => {
 
         const diags = env.driveDiagnostics();
         expect(diags.length).toBe(1);
-        expect(diags[0].messageText)
+        expect(ts.flattenDiagnosticMessageText(diags[0].messageText, '\n'))
             .toBe(
-                `No suitable injection token for parameter 'foo' of class 'MyService'.\nFound Foo`);
+                `No suitable injection token for parameter 'foo' of class 'MyService'.\n` +
+                `  Consider using the @Inject decorator to specify an injection token.`);
+        expect(diags[0].relatedInformation!.length).toBe(2);
+        expect(diags[0].relatedInformation![0].messageText)
+            .toBe(
+                'This type corresponds with a namespace, which cannot be used as injection token.');
+        expect(diags[0].relatedInformation![1].messageText)
+            .toBe('The namespace import occurs here.');
       });
     });
 
@@ -4199,6 +4366,90 @@ runInEachFileSystem(os => {
          const jsContents = trim(env.getContents('test.js'));
          expect(jsContents).not.toContain(`import { MyType } from './types';`);
          // Note: `type: undefined` below, since MyType can't be represented as a value
+         expect(jsContents).toMatch(setClassMetadataRegExp('type: undefined'));
+       });
+
+    it('should use `undefined` in setClassMetadata for const enums', () => {
+      env.write(`keycodes.ts`, `
+        export const enum KeyCodes {A, B};
+      `);
+      env.write(`test.ts`, `
+        import {Component, Inject} from '@angular/core';
+        import {KeyCodes} from './keycodes';
+
+        @Component({
+          selector: 'some-comp',
+          template: '...',
+        })
+        export class SomeComp {
+          constructor(@Inject('arg-token') arg: KeyCodes) {}
+        }
+      `);
+
+      env.driveMain();
+      const jsContents = trim(env.getContents('test.js'));
+      expect(jsContents).not.toContain(`import { KeyCodes } from './keycodes';`);
+      // Note: `type: undefined` below, since KeyCodes can't be represented as a value
+      expect(jsContents).toMatch(setClassMetadataRegExp('type: undefined'));
+    });
+
+    it('should preserve the types of non-const enums in setClassMetadata', () => {
+      env.write(`keycodes.ts`, `
+        export enum KeyCodes {A, B};
+      `);
+      env.write(`test.ts`, `
+        import {Component, Inject} from '@angular/core';
+        import {KeyCodes} from './keycodes';
+
+        @Component({
+          selector: 'some-comp',
+          template: '...',
+        })
+        export class SomeComp {
+          constructor(@Inject('arg-token') arg: KeyCodes) {}
+        }
+      `);
+
+      env.driveMain();
+      const jsContents = trim(env.getContents('test.js'));
+      expect(jsContents).toContain(`import { KeyCodes } from './keycodes';`);
+      expect(jsContents).toMatch(setClassMetadataRegExp('type: i1.KeyCodes'));
+    });
+
+    it('should use `undefined` in setClassMetadata if types originate from type-only imports',
+       () => {
+         env.write(`types.ts`, `
+           export default class {}
+           export class TypeOnly {}
+         `);
+         env.write(`test.ts`, `
+           import {Component, Inject, Injectable} from '@angular/core';
+           import type DefaultImport from './types';
+           import type {TypeOnly} from './types';
+           import type * as types from './types';
+
+           @Component({
+             selector: 'some-comp',
+             template: '...',
+           })
+           export class SomeComp {
+             constructor(
+               @Inject('token') namedImport: TypeOnly,
+               @Inject('token') defaultImport: DefaultImport,
+               @Inject('token') namespacedImport: types.TypeOnly,
+             ) {}
+           }
+        `);
+
+         env.driveMain();
+         const jsContents = trim(env.getContents('test.js'));
+         // Module specifier for type-only import should not be emitted
+         expect(jsContents).not.toContain('./types');
+         // Default type-only import should not be emitted
+         expect(jsContents).not.toContain('DefaultImport');
+         // Named type-only import should not be emitted
+         expect(jsContents).not.toContain('TypeOnly');
+         // The parameter type in class metadata should be undefined
          expect(jsContents).toMatch(setClassMetadataRegExp('type: undefined'));
        });
 

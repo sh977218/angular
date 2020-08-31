@@ -2,10 +2,9 @@
 
 In a single-page app, you change what the user sees by showing or hiding portions of the display that correspond to particular components, rather than going out to the server to get a new page.
 As users perform application tasks, they need to move between the different [views](guide/glossary#view "Definition of view") that you have defined.
-To implement this kind of navigation within the single page of your app, you use the Angular **`Router`**.
 
-To handle the navigation from one [view](guide/glossary#view) to the next, you use the Angular _router_.
-The router enables navigation by interpreting a browser URL as an instruction to change the view.
+To handle the navigation from one [view](guide/glossary#view) to the next, you use the Angular **`Router`**.
+The **`Router`** enables navigation by interpreting a browser URL as an instruction to change the view.
 
 To explore a sample app featuring the router's primary features, see the <live-example></live-example>.
 
@@ -335,22 +334,22 @@ Inject `ActivatedRoute` and `Router` in the constructor of the component class s
 
 <code-example header="Component 2 (excerpt)">
 
-  item$: Observable<Item>;
+  hero$: Observable<Hero>;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router  ) {}
 
   ngOnInit() {
-    let id = this.route.snapshot.paramMap.get('id');
-    this.hero$ = this.service.getHero(id);
+    const heroId = this.route.snapshot.paramMap.get('id');
+    this.hero$ = this.service.getHero(heroId);
   }
 
-  gotoItems(item: Item) {
-    let heroId = item ? hero.id : null;
-    // Pass along the item id if available
+  gotoItems(hero: Hero) {
+    const heroId = hero ? hero.id : null;
+    // Pass along the hero id if available
     // so that the HeroList component can select that item.
-    this.router.navigate(['/heroes', { id: itemId }]);
+    this.router.navigate(['/heroes', { id: heroId }]);
   }
 
 </code-example>
